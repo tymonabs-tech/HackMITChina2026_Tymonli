@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="240" viewBox="0 0 860 240">
+  <rect width="100%" height="100%" fill="#0b1020"/>
+  <text x="24" y="34" fill="#ffffff" font-size="20" font-family="Arial, sans-serif">Greedy：关键变化（第 1 轮选择“效率最高”的课程）</text>
+  <text x="24" y="62" fill="#9aa4b2" font-size="14" font-family="Arial, sans-serif">效率 ∝ 学分 × 难度因子 ÷ 递减收益惩罚</text>
+
+  <g transform="translate(24,90)">
+    <text x="0" y="16" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">English</text>
+    <rect x="90" y="4" width="330" height="16" rx="8" fill="#1f2937"/>
+    <rect x="90" y="4" width="264" height="16" rx="8" fill="#2563eb"/>
+    <text x="430" y="16" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">3.2</text>
+
+    <text x="0" y="52" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">Math</text>
+    <rect x="90" y="40" width="330" height="16" rx="8" fill="#1f2937"/>
+    <rect x="90" y="40" width="248" height="16" rx="8" fill="#2563eb"/>
+    <text x="430" y="52" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">3.0</text>
+
+    <text x="0" y="88" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">Physics</text>
+    <rect x="90" y="76" width="330" height="16" rx="8" fill="#1f2937"/>
+    <rect x="90" y="76" width="231" height="16" rx="8" fill="#2563eb"/>
+    <text x="430" y="88" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">2.8</text>
+
+    <text x="0" y="124" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">Art</text>
+    <rect x="90" y="112" width="330" height="16" rx="8" fill="#1f2937"/>
+    <rect x="90" y="112" width="314" height="16" rx="8" fill="#2563eb"/>
+    <text x="430" y="124" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">3.8</text>
+
+    <rect x="520" y="0" width="310" height="150" rx="12" fill="#0f172a" stroke="#334155"/>
+    <text x="540" y="26" fill="#e2e8f0" font-size="14" font-family="Arial, sans-serif">本轮选择：English</text>
+    <text x="540" y="50" fill="#9aa4b2" font-size="12" font-family="Arial, sans-serif">学分=3，难度=3，提升空间大</text>
+    <text x="540" y="74" fill="#9aa4b2" font-size="12" font-family="Arial, sans-serif">+0.01（示意） → 加权收益 +0.03</text>
+    <text x="540" y="110" fill="#60a5fa" font-size="12" font-family="Arial, sans-serif">下一轮将重新计算“递减收益”</text>
+
+    <path d="M470,12 C510,12 510,12 520,18" stroke="#60a5fa" stroke-width="2" fill="none"/>
+    <circle cx="470" cy="12" r="4" fill="#60a5fa"/>
+  </g>
+</svg>
+

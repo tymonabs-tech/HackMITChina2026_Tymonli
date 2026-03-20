@@ -1,0 +1,574 @@
+
+/* GPA Pro Planner - Modern UI Styles */
+
+/* 
+ * ==================================================================
+ *  1. Design Tokens & Root Variables (Light & Dark Modes)
+ * ==================================================================
+ */
+
+:root {
+    /* Color Palette (Light Mode - Enhanced Contrast) */
+    --primary-color: #0056b3; /* Darker Blue for light mode */
+    --primary-color-rgb: 0, 86, 179;
+    --secondary-color: #495057;
+    --success-color: #155724;
+    --warning-color: #856404;
+    --danger-color: #721c24;
+    --light-color: #f1f3f5;
+    --dark-color: #212529;
+
+    --bg-color: #ffffff; /* Pure white background */
+    --card-bg-color: #ffffff;
+    --text-color: #212529; /* Deep dark text */
+    --text-muted-color: #495057; /* Darker muted text */
+    --border-color: #ced4da; /* Visible border */
+    
+    /* Typography */
+    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-size-base: 1rem;
+    --font-weight-normal: 400;
+    --font-weight-bold: 700;
+
+    /* Spacing & Sizing (8px Grid) */
+    --spacing-unit: 8px;
+    --spacing-xs: calc(var(--spacing-unit) * 0.5);  /* 4px */
+    --spacing-sm: var(--spacing-unit);             /* 8px */
+    --spacing-md: calc(var(--spacing-unit) * 2);   /* 16px */
+    --spacing-lg: calc(var(--spacing-unit) * 3);   /* 24px */
+    --spacing-xl: calc(var(--spacing-unit) * 4);   /* 32px */
+
+    /* Borders & Shadows */
+    --border-radius: 0.5rem; /* 8px */
+    --border-width: 1.5px; /* Slightly thicker for visibility */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+    /* Transitions */
+    --transition-base: all 0.2s ease-in-out;
+}
+
+/* Dark Mode Variables (OLED Black) */
+[data-bs-theme="dark"] {
+    --primary-color: #3399FF;
+    --primary-color-rgb: 51, 153, 255;
+    --secondary-color: #adb5bd;
+    --success-color: #2ECC71;
+    --warning-color: #F1C40F;
+    --danger-color: #E74C3C;
+    --light-color: #1A1A1A;
+    --dark-color: #f8f9fa;
+
+    --bg-color: #000000;
+    --card-bg-color: #000000;
+    --text-color: #FFFFFF;
+    --text-muted-color: #A0A0A0;
+    --border-color: #575757;
+    --border-width: 1px;
+}
+
+
+/* 
+ * ==================================================================
+ *  2. Global Styles & Resets
+ * ==================================================================
+ */
+
+body {
+    font-family: var(--font-family-sans-serif);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: var(--transition-base);
+    scroll-behavior: smooth;
+}
+
+/* Smooth transitions for all elements */
+* {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Ensure strong contrast for navbar in light mode */
+.navbar-light .navbar-brand, 
+.navbar-light .nav-link,
+.navbar-light .navbar-text {
+    color: var(--dark-color) !important;
+}
+
+/* Ensure dropdown menus are visible in both modes */
+.dropdown-menu {
+    background-color: var(--card-bg-color);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.dropdown-item {
+    color: var(--text-color);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    color: var(--primary-color);
+}
+
+.dropdown-item.active {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+}
+
+.dropdown-divider {
+    border-top: 1px solid var(--border-color);
+}
+
+/* Input groups and icons contrast */
+.input-group-text {
+    background-color: var(--light-color);
+    border: var(--border-width) solid var(--border-color);
+    color: var(--text-color);
+}
+
+/* 
+ * ==================================================================
+ *  3. Component Overrides & Custom Styles
+ * ==================================================================
+ */
+
+/* Navbar - Ensure high visibility in both modes */
+.navbar {
+    background-color: var(--card-bg-color);
+    border-bottom: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.navbar-brand, .navbar-text, .nav-link {
+    color: var(--text-color) !important;
+}
+
+.navbar .btn-light {
+    background-color: var(--light-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg-color);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-base);
+}
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+.card-header {
+    background-color: transparent;
+    border-bottom: var(--border-width) solid var(--border-color);
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-color);
+}
+
+/* Buttons */
+.btn {
+    border-radius: var(--border-radius);
+    font-weight: var(--font-weight-bold);
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* Forms */
+.form-control, .form-select {
+    background-color: var(--bg-color);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+    transition: var(--transition-base);
+}
+.form-control:focus, .form-select:focus {
+    background-color: var(--card-bg-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.35);
+    color: var(--text-color);
+}
+.input-group-text {
+    background-color: var(--light-color);
+    border: var(--border-width) solid var(--border-color);
+    color: var(--text-muted-color);
+}
+
+/* Invalid state high visibility for OLED */
+.form-control.is-invalid {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.25);
+}
+
+/* Subject Item Card */
+.subject-item {
+    background-color: rgba(var(--primary-color-rgb), 0.05);
+    border-color: rgba(var(--primary-color-rgb), 0.1);
+}
+
+/* Table */
+.table {
+    --bs-table-bg: var(--card-bg-color);
+    --bs-table-border-color: var(--border-color);
+    --bs-table-striped-bg: rgba(var(--primary-color-rgb), 0.03);
+    --bs-table-hover-bg: rgba(var(--primary-color-rgb), 0.07);
+}
+.table thead th {
+    color: var(--primary-color);
+}
+
+/* Modal */
+.modal-content {
+    background-color: var(--card-bg-color);
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+}
+.modal-header {
+    border-bottom-color: var(--border-color);
+}
+.modal-footer {
+    border-top-color: var(--border-color);
+}
+
+/* Empty State Placeholder */
+#emptyState {
+    background-color: var(--card-bg-color);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius);
+    color: var(--text-muted-color);
+}
+
+/* 
+ * ==================================================================
+ *  4. Animations & Effects
+ * ==================================================================
+ */
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(20px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.subject-item {
+    animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.subject-item.removing {
+    animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.card-header i {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-header i {
+    transform: rotate(15deg) scale(1.2);
+}
+
+/* Retake Badge Styling */
+.retake-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background-color: var(--warning-color);
+    color: var(--dark-color);
+    font-weight: bold;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Voice Input Animation */
+#voiceInputBtn.recording {
+    background-color: var(--danger-color);
+    color: white;
+    border-color: var(--danger-color);
+    animation: pulse 1.5s infinite;
+}
+
+/* Skeleton Loading for AI */
+.skeleton-loader {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.skeleton-line {
+    height: 14px;
+    background: linear-gradient(90deg, var(--light-color) 25%, var(--border-color) 50%, var(--light-color) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Privacy Mode Styling (Optimized for Screenshots) */
+.privacy-active .subject-name-cell,
+.privacy-active .gpa-cell {
+    position: relative;
+    color: transparent !important;
+    text-shadow: 0 0 12px rgba(var(--primary-color-rgb), 0.8);
+    user-select: none;
+}
+
+.privacy-active .subject-name-cell::after,
+.privacy-active .gpa-cell::after {
+    content: "";
+    position: absolute;
+    left: 10%;
+    top: 25%;
+    width: 80%;
+    height: 50%;
+    background: var(--border-color);
+    border-radius: 4px;
+    opacity: 0.6;
+}
+
+.privacy-active #radarChart,
+.privacy-active #barChart {
+    filter: blur(12px) grayscale(100%);
+    opacity: 0.5;
+}
+
+#resultsContainer {
+    transition: all 0.3s ease;
+}
+
+/* Modal chat styling */
+.ai-bubble {
+    background-color: var(--light-color);
+    border: var(--border-width) solid var(--border-color);
+    color: var(--text-color);
+}
+.ai-msg {
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease-out;
+}
+.user-msg-container {
+    text-align: right;
+}
+.user-msg-bubble {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    display: inline-block;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    max-width: 85%;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Alert Styling for Dark Mode */
+[data-bs-theme="dark"] .alert {
+    background-color: #1A1A1A;
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+[data-bs-theme="dark"] .alert-warning {
+    border-left: 4px solid var(--warning-color);
+}
+[data-bs-theme="dark"] .alert-success {
+    border-left: 4px solid var(--success-color);
+}
+[data-bs-theme="dark"] .alert-danger {
+    border-left: 4px solid var(--danger-color);
+}
+
+/* 
+ * ==================================================================
+ *  5. Routing & Page Transitions
+ * ==================================================================
+ */
+
+.page {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    min-height: calc(100vh - 70px);
+}
+
+.page.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Page switch fade effect */
+.page-fade-in {
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Navbar active state indicator */
+.navbar-nav .nav-link {
+    position: relative;
+    padding-bottom: 5px;
+    margin: 0 10px;
+    opacity: 0.8;
+}
+
+.navbar-nav .nav-link.active {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+/* Algorithm Page Specific Styles */
+#page-algorithm .card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#page-algorithm .list-group-item {
+    background-color: transparent;
+    color: var(--text-color);
+    border-color: var(--border-color);
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    transition: var(--transition-base);
+}
+
+#page-algorithm .list-group-item:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.05);
+    color: var(--primary-color);
+}
+
+#page-algorithm .list-group-item.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+#page-algorithm code {
+    background-color: rgba(0,0,0,0.2);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+#page-algorithm .sticky-top {
+    z-index: 1020;
+}
+
+/* Form Control Extra Small */
+.form-control-xs {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.2rem;
+}
+
+.xsmall {
+    font-size: 0.7rem;
+    color: var(--text-muted-color);
+}
+
+.final-exam-calc {
+    background-color: var(--light-color) !important;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+[data-bs-theme="dark"] .final-exam-calc {
+    background-color: #1A1A1A !important;
+}
+
+/* Benchmark Result Styles */
+.benchmark-card {
+    border-left: 4px solid var(--primary-color);
+}
+.benchmark-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+/* UC Toggle Label */
+.form-check-label.small.fw-bold {
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+#summaryTopSubjects .badge {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.result-card {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px;
+    background: var(--card-bg-color);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+[data-bs-theme="dark"] .result-card {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.result-card .meta {
+    font-size: 0.85rem;
+    color: var(--text-muted-color);
+}
+
+.toast {
+    border-radius: 12px;
+}
+
+#creditsPolicyHint {
+    line-height: 1.35;
+}
+
+#batchSetCreditsBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+[data-bs-theme="dark"] #creditsPolicyHint {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Smooth anchor scrolling offset */
+:target {
+    scroll-margin-top: 100px;
+}

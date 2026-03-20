@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="220" viewBox="0 0 860 220">
+  <rect width="100%" height="100%" fill="#0b1020"/>
+  <text x="24" y="34" fill="#ffffff" font-size="20" font-family="Arial, sans-serif">Greedy：初始状态（当前 GPA）</text>
+  <text x="24" y="62" fill="#9aa4b2" font-size="14" font-family="Arial, sans-serif">目标：把“加权缺口”分配到最省力的课程</text>
+
+  <g transform="translate(24,90)">
+    <text x="0" y="16" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">English</text>
+    <rect x="90" y="4" width="330" height="16" rx="8" fill="#1f2937"/>
+    <rect x="90" y="4" width="264" height="16" rx="8" fill="#2563eb"/>
+    <text x="430" y="16" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">3.2</text>
+
+    <text x="0" y="52" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">Math</text>
+    <rect x="90" y="40" width="330" height="16" rx="8" fill="#1f2937"/>
+    <rect x="90" y="40" width="248" height="16" rx="8" fill="#2563eb"/>
+    <text x="430" y="52" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">3.0</text>
+
+    <text x="0" y="88" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">Physics</text>
+    <rect x="90" y="76" width="330" height="16" rx="8" fill="#1f2937"/>
+    <rect x="90" y="76" width="231" height="16" rx="8" fill="#2563eb"/>
+    <text x="430" y="88" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">2.8</text>
+
+    <text x="0" y="124" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">Art</text>
+    <rect x="90" y="112" width="330" height="16" rx="8" fill="#1f2937"/>
+    <rect x="90" y="112" width="314" height="16" rx="8" fill="#2563eb"/>
+    <text x="430" y="124" fill="#cbd5e1" font-size="14" font-family="Arial, sans-serif">3.8</text>
+
+    <text x="520" y="16" fill="#9aa4b2" font-size="13" font-family="Arial, sans-serif">满分 4.0</text>
+    <line x1="90" y1="152" x2="420" y2="152" stroke="#334155" stroke-width="1"/>
+    <text x="90" y="172" fill="#9aa4b2" font-size="12" font-family="Arial, sans-serif">0</text>
+    <text x="408" y="172" fill="#9aa4b2" font-size="12" font-family="Arial, sans-serif">4.0</text>
+  </g>
+</svg>
+

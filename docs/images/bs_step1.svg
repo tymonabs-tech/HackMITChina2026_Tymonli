@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="230" viewBox="0 0 860 230">
+  <rect width="100%" height="100%" fill="#0b1020"/>
+  <text x="24" y="34" fill="#ffffff" font-size="20" font-family="Arial, sans-serif">Binary Search：关键轮（mid 判定）</text>
+  <text x="24" y="62" fill="#9aa4b2" font-size="14" font-family="Arial, sans-serif">Feasible(mid)=True → R=mid；否则 L=mid</text>
+
+  <g transform="translate(60,110)">
+    <line x1="0" y1="0" x2="720" y2="0" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="0" cy="0" r="7" fill="#60a5fa"/>
+    <circle cx="720" cy="0" r="7" fill="#60a5fa"/>
+    <circle cx="360" cy="0" r="9" fill="#f59e0b"/>
+    <text x="338" y="-16" fill="#e2e8f0" font-size="12" font-family="Arial, sans-serif">mid</text>
+
+    <path d="M360,0 C390,30 420,30 450,0" stroke="#f59e0b" stroke-width="2" fill="none"/>
+    <rect x="470" y="-38" width="320" height="76" rx="12" fill="#0f172a" stroke="#334155"/>
+    <text x="486" y="-10" fill="#e2e8f0" font-size="13" font-family="Arial, sans-serif">判定：Feasible(mid)=True</text>
+    <text x="486" y="12" fill="#9aa4b2" font-size="12" font-family="Arial, sans-serif">更新：R = mid（向左收缩）</text>
+  </g>
+</svg>
+

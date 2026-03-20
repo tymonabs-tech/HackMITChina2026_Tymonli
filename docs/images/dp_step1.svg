@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="250" viewBox="0 0 860 250">
+  <rect width="100%" height="100%" fill="#0b1020"/>
+  <text x="24" y="34" fill="#ffffff" font-size="20" font-family="Arial, sans-serif">DP：关键轮（状态转移）</text>
+  <text x="24" y="62" fill="#9aa4b2" font-size="14" font-family="Arial, sans-serif">dp[b] = max(dp[b], dp[b-cost] + value)</text>
+
+  <g transform="translate(24,95)">
+    <rect x="0" y="0" width="812" height="130" rx="14" fill="#0f172a" stroke="#334155"/>
+    <text x="18" y="28" fill="#e2e8f0" font-size="14" font-family="Arial, sans-serif">示例：cost=2, value=5</text>
+    <text x="18" y="58" fill="#9aa4b2" font-size="12" font-family="Arial, sans-serif">如果 dp[0]=0，则 dp[2] 可以更新为 5</text>
+    <text x="18" y="88" fill="#9aa4b2" font-size="12" font-family="Arial, sans-serif">继续枚举 b，从大到小更新（避免重复使用同一项）</text>
+    <path d="M330,52 C380,10 430,10 480,52" stroke="#22c55e" stroke-width="2" fill="none"/>
+    <text x="500" y="58" fill="#22c55e" font-size="12" font-family="Arial, sans-serif">可达性/最优值扩散</text>
+  </g>
+</svg>
+

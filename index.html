@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Pro Planner - 智能规划</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons (Stars) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#/"><i class="fas fa-graduation-cap me-2"></i>GPA Pro Planner</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="nav-home" href="#/"><i class="fas fa-calculator me-1"></i>GPA 计算器</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-algo" href="#/algorithm"><i class="fas fa-book-open me-1"></i>算法讲解</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-light btn-sm me-2" id="theme-toggle-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-light btn-sm me-3 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#aiModal">
+                        <i class="fas fa-robot me-1 text-primary"></i> AI 咨询助手
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content">
+        <!-- Page: Home (Calculator) -->
+        <section id="page-home" class="page active">
+            <div class="container py-4">
+                <div class="row g-4">
+                    
+                    <!-- Left Column: Input -->
+                    <div class="col-lg-5">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header fw-bold text-primary d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-sliders-h me-2"></i>规划设置</span>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="termDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-calendar-alt me-1"></i> <span id="currentTermName">当前学期</span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" id="termList">
+                                <!-- Term items will be injected here -->
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item small fw-bold text-primary" href="#" onclick="duplicateActiveTerm()"><i class="fas fa-copy me-1"></i>复制并进入沙盒模式</a></li>
+                                <li><a class="dropdown-item small fw-bold text-primary" href="#" onclick="addNewTerm()"><i class="fas fa-plus me-1"></i>添加新学期</a></li>
+                            </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                        <!-- Curriculum Selection -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">课程体系 (Curriculum)</label>
+                            <select id="curriculumMode" class="form-select" onchange="changeCurriculumMode()">
+                                <option value="general">通用 (General GPA)</option>
+                                <option value="ib">IB (1-7 Scale + TOK/EE)</option>
+                                <option value="ap">AP (Weighted 5.0)</option>
+                            </select>
+                            <div id="ibExtraPoints" class="mt-2 d-none">
+                                <label class="form-label small fw-bold">TOK/EE 核心分 (0-3)</label>
+                                <input type="number" id="tokEePoints" class="form-control form-control-sm" min="0" max="3" value="0" oninput="validateAllInputs()">
+                            </div>
+                        </div>
+
+                        <!-- Global Settings -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">GPA 满分设置</label>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text"><i class="fas fa-trophy"></i></span>
+                                        <input type="number" id="maxGPA" class="form-control" placeholder="例如: 4.0" step="0.1" value="4.0" onchange="updateScaleLabel()" oninput="validateAllInputs()">
+                                        <span class="input-group-text">分制</span>
+                                    </div>
+
+                                    <label class="form-label fw-bold">当前总 GPA</label>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                                        <input type="number" id="currentGPA" class="form-control" placeholder="自动计算" step="0.01" value="" readonly>
+                                        <span class="input-group-text" id="currentScaleLabel">/ 4.0</span>
+                                    </div>
+                                    <div class="form-text" id="currentGPAStatus">将根据下方科目自动计算当前总 GPA</div>
+
+                                    <label class="form-label fw-bold">目标总 GPA</label>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text"><i class="fas fa-bullseye"></i></span>
+                                        <input type="number" id="targetGPA" class="form-control" placeholder="例如: 3.8" step="0.1" value="3.8" oninput="validateAllInputs()">
+                                        <span class="input-group-text" id="targetScaleLabel">/ 4.0</span>
+                                    </div>
+                                    
+                                    <!-- Cumulative GPA Summary -->
+                                    <div class="p-2 rounded bg-primary bg-opacity-10 border border-primary border-opacity-25 d-flex justify-content-between align-items-center">
+                                        <span class="small fw-bold text-primary"><i class="fas fa-layer-group me-1"></i>累积 GPA (CGPA)</span>
+                                        <span class="fw-bold text-primary" id="cgpaValue">--</span>
+                                    </div>
+                                </div>
+
+                                <!-- Subject Count -->
+                        <div class="mb-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <label class="form-label fw-bold">科目数量</label>
+                                <input type="number" id="subjectCount" class="form-control" placeholder="例如: 5" min="1" value="7" onchange="updateSubjectCount()">
+                            </div>
+                            <div class="form-check form-switch ms-3">
+                                <input class="form-check-input" type="checkbox" id="ucStandardsToggle" onchange="validateAllInputs()">
+                                <label class="form-check-label small fw-bold" for="ucStandardsToggle">UC/Common App 标准</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 p-3 rounded border">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" id="useCreditsToggle" checked onchange="updateCreditsUI()">
+                                    <label class="form-check-label fw-bold" for="useCreditsToggle">学分参与计算</label>
+                                </div>
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <div class="input-group input-group-sm" style="width: 180px;">
+                                        <span class="input-group-text">统一学分</span>
+                                        <input type="number" id="batchCreditsValue" class="form-control" value="1" step="0.5" min="0.5">
+                                    </div>
+                                    <button class="btn btn-sm btn-primary" type="button" id="batchSetCreditsBtn" onclick="batchSetCredits()">
+                                        <i class="fas fa-layer-group me-1"></i>一键应用
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="small text-muted mt-2" id="creditsPolicyHint">学分用于体现课程权重：学分越高，对总 GPA 影响越大。</div>
+                        </div>
+
+                                <!-- Subjects List -->
+                                <div class="mb-3">
+                                    <div class="card-header fw-bold text-primary d-flex justify-content-between align-items-center">
+                                        <span><i class="fas fa-book me-2"></i>科目明细</span>
+                                        <div class="d-flex align-items-center">
+                                            <label for="ocrUpload" class="btn btn-sm btn-outline-info me-2 mb-0" title="上传成绩单截图自动识别">
+                                                <i class="fas fa-camera me-1"></i> 识别
+                                            </label>
+                                            <input type="file" id="ocrUpload" class="d-none" accept="image/*" onchange="processOCR(this)">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="addSubject()">
+                                                <i class="fas fa-plus me-1"></i> 添加
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="subjectsContainer">
+                                        <!-- Subject Items will be injected here -->
+                                    </div>
+                                </div>
+
+                                <button id="generatePlanBtn" class="btn btn-primary w-100 py-2 fw-bold" onclick="generatePlan()">
+                                    <i class="fas fa-magic me-2"></i>生成智能规划
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Results -->
+                    <div class="col-lg-7">
+                        
+                        <!-- Initial State / Placeholder -->
+                        <div id="emptyState" class="text-center py-5 text-muted">
+                            <i class="fas fa-chart-line fa-4x mb-3 text-secondary opacity-50"></i>
+                            <h5>准备好开始规划了吗？</h5>
+                            <p>在左侧输入你的目标和各科当前成绩，<br>AI 将为你生成个性化的提分方案。</p>
+                            <div class="mt-3 d-flex justify-content-center gap-2 flex-wrap">
+                                <button class="btn btn-primary btn-sm" type="button" onclick="loadSampleData()">
+                                    <i class="fas fa-bolt me-1"></i>填入示例数据
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="openOnboarding()">
+                                    <i class="fas fa-compass me-1"></i>新手引导
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Results Container (Hidden initially) -->
+                        <div id="resultsContainer" class="d-none">
+                            
+                            <!-- Alert for High/Low Target -->
+                            <div id="targetAlert" class="alert alert-warning d-none" role="alert">
+                                <!-- Alert content -->
+                            </div>
+
+                            <div id="summaryCard" class="card shadow-sm border-0 mb-3 d-none">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                                        <div>
+                                            <div class="small text-muted">目标缺口</div>
+                                            <div class="fw-bold fs-5">
+                                                <span id="summaryGapValue">--</span>
+                                                <span class="small text-muted" id="summaryGapUnit"></span>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="small text-muted">压力等级</div>
+                                            <span id="summaryStressBadge" class="badge bg-secondary">--</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <div class="small text-muted">最关键科目（优先提升）</div>
+                                        <div id="summaryTopSubjects" class="d-flex flex-wrap gap-2 mt-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Charts Section -->
+                            <div class="row g-3 mb-4">
+                                <!-- Radar Chart Card -->
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm border-0 h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title fw-bold text-center mb-3 small">目标 vs 当前能力</h6>
+                                            <div class="chart-container" style="position: relative; height:200px; width:100%">
+                                                <canvas id="radarChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Bar Chart Card -->
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm border-0 h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title fw-bold text-center mb-3 small">各科提分潜力</h6>
+                                            <div class="chart-container" style="position: relative; height:200px; width:100%">
+                                                <canvas id="barChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Line Chart Card -->
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm border-0 h-100">
+                                        <div class="card-body">
+                                            <h6 class="card-title fw-bold text-center mb-3 small">GPA 历史趋势</h6>
+                                            <div class="chart-container" style="position: relative; height:200px; width:100%">
+                                                <canvas id="lineChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Detailed Plan Table -->
+                            <div class="d-md-none d-flex justify-content-between align-items-center mb-2">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="privacyToggleMobile" onchange="togglePrivacyMode()">
+                                    <label class="form-check-label small" for="privacyToggleMobile"><i class="fas fa-user-shield me-1"></i>隐私模式</label>
+                                </div>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="exportToImage()">
+                                    <i class="fas fa-image"></i> 图片
+                                </button>
+                            </div>
+                            <div id="resultsCards" class="d-md-none"></div>
+
+                            <div class="card shadow-sm border-0 d-none d-md-block">
+                                <div class="card-header fw-bold text-primary d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-list-ul me-2"></i>详细分数规划</span>
+                                    <div class="d-flex align-items-center">
+                                        <div class="form-check form-switch me-3">
+                                            <input class="form-check-input" type="checkbox" id="privacyToggle" onchange="togglePrivacyMode()">
+                                            <label class="form-check-label small" for="privacyToggle"><i class="fas fa-user-shield me-1"></i>隐私模式</label>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-secondary me-1" onclick="exportToImage()">
+                                            <i class="fas fa-image"></i> 图片
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>科目</th>
+                                                    <th>当前 GPA</th>
+                                                    <th>学分</th>
+                                                    <th>难度</th>
+                                                    <th>目标分数段</th>
+                                                    <th>对应 GPA</th>
+                                                    <th>状态</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="resultsBody">
+                                                <!-- Results Rows -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3 text-center text-muted small">
+                                * 分数仅供参考，请根据实际考试难度调整备考策略
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page: Algorithm Explanation -->
+        <section id="page-algorithm" class="page">
+            <div class="container py-4">
+                <div class="row">
+                    <!-- Sidebar: Anchor Links -->
+                    <div class="col-md-3 d-none d-md-block">
+                        <div class="card shadow-sm border-0 sticky-top" style="top: 80px;">
+                            <div class="card-header bg-primary text-white fw-bold">
+                                <i class="fas fa-list me-2"></i> 快速导航
+                            </div>
+                            <div class="list-group list-group-flush">
+                                <a href="#intro" class="list-group-item list-group-item-action">算法概述</a>
+                                <a href="#params" class="list-group-item list-group-item-action">核心参数解析</a>
+                                <a href="#formula" class="list-group-item list-group-item-action">计算公式演示</a>
+                                <a href="#impact" class="list-group-item list-group-item-action">参数影响可视化</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="col-md-9">
+                        <div class="card shadow-sm border-0 mb-4" id="intro">
+                            <div class="card-body">
+                                <h3 class="fw-bold text-primary mb-3">GPA 智能反向规划算法</h3>
+                                <p class="lead">本算法旨在通过“贪心优化”逻辑，计算出达成目标 GPA 的最省力路径。它会自动平衡各科目的难度与学分权重，为你提供科学的备考建议。</p>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm border-0 mb-4" id="params">
+                            <div class="card-header bg-light fw-bold text-primary">
+                                <i class="fas fa-info-circle me-2"></i> 核心数值参数解析
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <div class="col-12">
+                                        <div class="p-3 rounded bg-light border-start border-primary border-4">
+                                            <h5 class="fw-bold">1. 学分 (Credits)</h5>
+                                            <p class="small text-muted mb-2">定义：该科目在总分中所占的权重。国际学校通常以 0.5、1.0 或 3.0 为单位。</p>
+                                            <p class="mb-0"><strong>在算法中的作用：</strong> 权重放大器。提升 1.0 学分科目的 1 分 GPA，对总分的影响是 0.5 学分科目的 2 倍。算法会优先在学分高的科目上寻找提分空间。</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="p-3 rounded bg-light border-start border-warning border-4">
+                                            <h5 class="fw-bold">2. 难度系数 (Difficulty 1-5)</h5>
+                                            <p class="small text-muted mb-2">定义：用户主观评估的科目挑战程度。1 为最易，5 为最难。</p>
+                                            <p class="mb-0"><strong>在算法中的作用：</strong> 阻力系数。算法假设难度越大的科目，每提升 0.1 分所需的努力越多。因此，它会尽量“避重就轻”，将目标分摊到难度较低的科目上。</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="p-3 rounded bg-light border-start border-info border-4">
+                                            <h5 class="fw-bold">3. 当前绩点 (Current GPA)</h5>
+                                            <p class="small text-muted mb-2">定义：当前已获得的成绩。例如 3.5/4.0。</p>
+                                            <p class="mb-0"><strong>在算法中的作用：</strong> 计算基准。算法根据当前值与满分的差距来确定“可提升潜力”。如果某科已经是满分，则算法会将其状态设为“维持”。</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm border-0 mb-4" id="formula">
+                            <div class="card-header bg-light fw-bold text-primary">
+                                <i class="fas fa-calculator me-2"></i> 计算公式与示例
+                            </div>
+                            <div class="card-body">
+                                <div class="bg-dark text-white p-4 rounded mb-4">
+                                    <h6 class="text-warning fw-bold mb-3">核心逻辑：难度加权分配公式</h6>
+                                    <code class="text-info fs-5">提分权重 = 学分 × ((7 - 难度) / 4)</code>
+                                    <hr class="opacity-25">
+                                    <p class="mb-0 small">算法会根据该权重在所有科目间分配“目标总缺口”，确保总投入精力最小化。</p>
+                                </div>
+                                
+                                <h6 class="fw-bold mb-3">实例演示：</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered align-middle text-center">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>科目</th>
+                                                <th>学分</th>
+                                                <th>难度</th>
+                                                <th>算法判定</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>数学</td>
+                                                <td>3.0</td>
+                                                <td>4</td>
+                                                <td class="text-muted">学分高但难，适度提分</td>
+                                            </tr>
+                                            <tr>
+                                                <td>艺术</td>
+                                                <td>1.0</td>
+                                                <td>1</td>
+                                                <td class="text-success fw-bold">容易且学分低，优先拿满</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm border-0 mb-4" id="impact">
+                            <div class="card-header bg-light fw-bold text-primary">
+                                <i class="fas fa-chart-pie me-2"></i> 参数影响可视化
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-7">
+                                        <div class="chart-container" style="position: relative; height:300px; width:100%">
+                                            <canvas id="algoImpactChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <ul class="list-unstyled small">
+                                            <li class="mb-3">
+                                                <i class="fas fa-circle text-primary me-2"></i> <strong>学分权重：</strong> 影响系数最高，直接决定总 GPA。
+                                            </li>
+                                            <li class="mb-3">
+                                                <i class="fas fa-circle text-warning me-2"></i> <strong>难度系数：</strong> 决定规划的“舒适度”，反向调节提分建议。
+                                            </li>
+                                            <li class="mb-3">
+                                                <i class="fas fa-circle text-info me-2"></i> <strong>当前 GPA：</strong> 决定了提升的“天花板”上限。
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Template for Subject Item (Hidden) -->
+    <template id="subjectTemplate">
+        <div class="subject-item card p-3 mb-2 border">
+            <div class="d-flex justify-content-between mb-2 align-items-center">
+                <input type="text" class="form-control form-control-sm me-2 subject-name" placeholder="科目名称" list="subject-list" value="数学" oninput="validateAllInputs()">
+                <div class="d-flex align-items-center">
+                    <!-- Curriculum Specific Badges/Toggles -->
+                    <div class="curriculum-ib-fields d-none me-2">
+                        <select class="form-select form-select-sm subject-ib-level" onchange="validateAllInputs()">
+                            <option value="SL">SL</option>
+                            <option value="HL">HL</option>
+                        </select>
+                    </div>
+                    <div class="curriculum-ap-fields d-none me-2">
+                        <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input subject-is-ap" type="checkbox" onchange="validateAllInputs()">
+                            <label class="form-check-label small">AP</label>
+                        </div>
+                    </div>
+
+                    <div class="form-check form-switch me-2 mb-0" title="是否为重修科目">
+                        <input class="form-check-input subject-is-retake" type="checkbox" onchange="validateAllInputs()">
+                    </div>
+                    <button class="btn btn-sm text-primary me-1" onclick="openFinalExamCalc(this)" title="期末保底计算">
+                        <i class="fas fa-calculator"></i>
+                    </button>
+                    <button class="btn btn-sm text-danger remove-btn" onclick="removeSubject(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row g-2 align-items-center">
+                <div class="col-4">
+                    <label class="form-label small mb-1">当前 GPA</label>
+                    <input type="number" class="form-control form-control-sm subject-current-gpa" placeholder="例如: 3.5" step="0.1" value="3.0" oninput="validateAllInputs()">
+                </div>
+                <div class="col-4">
+                    <label class="form-label small mb-1">学分</label>
+                    <input type="number" class="form-control form-control-sm subject-credits" placeholder="例如: 3.0" step="0.5" value="3.0" oninput="validateAllInputs()">
+                </div>
+                <div class="col-4">
+                    <label class="form-label small mb-1">难度 (1-5)</label>
+                    <input type="number" class="form-control form-control-sm subject-difficulty" placeholder="1-5" min="1" max="5" step="1" value="3" oninput="validateAllInputs()">
+                </div>
+            </div>
+            <!-- Final Exam Savior Section (Hidden by default) -->
+            <div class="final-exam-calc mt-2 p-2 bg-light rounded d-none border">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="small fw-bold text-primary">期末保底计算 (Final Savior)</span>
+                    <button class="btn-close" style="font-size: 0.5rem;" onclick="closeFinalExamCalc(this)"></button>
+                </div>
+                <div class="row g-2">
+                    <div class="col-4">
+                        <label class="xsmall mb-0">平时分 %</label>
+                        <input type="number" class="form-control form-control-xs current-grade-percent" value="90" oninput="calcRequiredFinal(this)">
+                    </div>
+                    <div class="col-4">
+                        <label class="xsmall mb-0">期末占比 %</label>
+                        <input type="number" class="form-control form-control-xs final-weight-percent" value="30" oninput="calcRequiredFinal(this)">
+                    </div>
+                    <div class="col-4">
+                        <label class="xsmall mb-0">目标总分 %</label>
+                        <input type="number" class="form-control form-control-xs target-grade-percent" value="90" oninput="calcRequiredFinal(this)">
+                    </div>
+                </div>
+                <div class="mt-2 text-center small">
+                    期末需考: <span class="fw-bold text-danger required-final-result">--</span> %
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- DataList for Subject Autocomplete -->
+    <datalist id="subject-list">
+        <option value="数学">
+        <option value="英语">
+        <option value="物理">
+        <option value="化学">
+        <option value="生物">
+        <option value="历史">
+        <option value="地理">
+        <option value="经济">
+        <option value="计算机科学">
+        <option value="艺术">
+        <option value="心理学">
+        <option value="商务管理">
+        <option value="社会学">
+        <option value="政治">
+        <option value="TOK (理论知识)">
+        <option value="中文 (第一语言)">
+        <option value="西班牙语">
+        <option value="法语">
+        <option value="德语">
+        <option value="体育">
+    </datalist>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="js/db.js"></script>
+    <script src="js/algorithm.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/credits-utils.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- AI Modal -->
+    <div class="modal fade" id="aiModal" tabindex="-1" aria-labelledby="aiModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white border-0 d-flex justify-content-between">
+                    <h5 class="modal-title fw-bold" id="aiModalLabel"><i class="fas fa-robot me-2"></i>AI 规划顾问</h5>
+                    <div>
+                        <button type="button" class="btn btn-sm btn-light me-2" data-bs-toggle="collapse" data-bs-target="#aiSettings" aria-expanded="false">
+                            <i class="fas fa-cog"></i> 设置
+                        </button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                
+                <!-- API 密钥设置 -->
+                <div class="collapse border-bottom" id="aiSettings">
+                    <div class="p-3">
+                        <label class="form-label small fw-bold">zaiwenai API 密钥</label>
+                        <div class="input-group input-group-sm">
+                            <input type="password" id="apiKeyInput" class="form-control" placeholder="输入你的 API 密钥 (sk-...)" value="">
+                            <button class="btn btn-outline-secondary" type="button" onclick="saveAPIKey()">
+                                <i class="fas fa-save"></i> 保存
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="toggleAPIKeyVisibility()" title="显示/隐藏密钥">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="form-text text-muted mt-2 d-block">
+                            🔐 <strong>安全提示：</strong>密钥仅存储在本地浏览器中，不会上传到服务器
+                        </small>
+                        <div class="mt-2 d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-info" onclick="testAPIConnection()" type="button">
+                                <i class="fas fa-flask"></i> 测试连接
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body p-0">
+                    <div id="chatContainer" class="p-3 overflow-auto" style="height: 400px;">
+                        <div class="ai-msg mb-3">
+                            <div class="d-inline-block p-3 rounded-3 shadow-sm ai-bubble" style="max-width: 85%;">
+                                你好！我是你的 GPA 智能助手。关于 GPA 提升、选课规划或者学习压力，有什么我可以帮你的吗？
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-3">
+                    <div class="input-group">
+                        <button class="btn btn-outline-secondary" type="button" id="voiceInputBtn" title="语音输入">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <input type="text" id="aiInput" class="form-control border-2" placeholder="输入你的问题..." onkeypress="if(event.keyCode==13) sendMessage()">
+                        <button class="btn btn-primary px-4" type="button" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="onboardingModal" tabindex="-1" aria-labelledby="onboardingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-dark text-white border-0">
+                    <h5 class="modal-title fw-bold" id="onboardingModalLabel"><i class="fas fa-compass me-2"></i>快速上手</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="small text-muted">步骤 <span id="onboardingStepIndex">1</span>/3</div>
+                        <button class="btn btn-sm btn-outline-secondary" type="button" onclick="markOnboardingDone(true)">不再提示</button>
+                    </div>
+                    <div id="onboardingBody"></div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button class="btn btn-outline-secondary" type="button" onclick="prevOnboardingStep()">上一步</button>
+                    <button class="btn btn-primary" type="button" onclick="nextOnboardingStep()">下一步</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1200;">
+        <div id="appToast" class="toast align-items-center text-bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="appToastBody">--</div>
+                <button type="button" class="btn btn-sm btn-outline-light my-2 me-2 d-none" id="appToastActionBtn"></button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
